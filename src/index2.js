@@ -28,8 +28,6 @@ io.on('connect', function (socket) {
 
     console.log('a user connected');
 
-
-
     socket.on('message', function (data) {
         console.log(typeof data);
         console.log(data);
@@ -65,6 +63,8 @@ io.on('connect', function (socket) {
         console.log('changeSP');
         console.log(data);
         io.emit('changeSP', data);
+        
+        //io.emit('updateWeb',{sData: 45, output: 5, SP: 50}) //Test de gráfica
     });
     socket.on('cambioPID', function(data){
         console.log('CambioPID');

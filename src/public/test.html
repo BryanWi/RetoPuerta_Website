@@ -10,39 +10,168 @@
     <title>SocketIO Tester</title>
     <style>
       #Forms{
-        display: inline-block;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
       }
       #ChartDiv{
         display: flex;
         align-items: center;
         margin: auto;
       }
+      #input_SP{
+        font-size: 18px;
+        width: 200px;
+      }
+      #ChartDiv{
+        background-color: rgba(255,255,255,0.9);
+        border-radius: 10px;
+        padding: 5px;
+        width: 70%;
+      }
+      #myChart{
+        height: 40px;
+      }
+      body{
+        background: rgb(93, 86, 224);
+        background: linear-gradient(129deg, rgba(38,86,173,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+
+      }
+      h1 {
+        font-family: Arial, Helvetica, sans-serif;
+        color: rgb(227, 227, 227);
+      }
+      .contenido {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: large;
+        
+        color: rgb(227, 227, 227);
+      }
+      button {
+        border-radius: 5px;
+      }
+
+/* CSS */
+.button-14 {
+  background-image: linear-gradient(#f7f8fa ,#e7e9ec);
+  border-color: #adb1b8 #a2a6ac #8d9096;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 3px;
+  box-shadow: rgba(255,255,255,.6) 0 1px 0 inset;
+  box-sizing: border-box;
+  color: #0f1111;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Amazon Ember",Arial,sans-serif;
+  font-size: 14px;
+  height: 29px;
+  font-size: 13px;
+  outline: 0;
+  overflow: hidden;
+  padding: 0 11px;
+  text-align: center;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+
+.button-14:active {
+  border-bottom-color: #a2a6ac;
+}
+
+.button-14:active:hover {
+  border-bottom-color: #a2a6ac;
+}
+
+.button-14:hover {
+  border-color: #a2a6ac #979aa1 #82858a;
+}
+
+.button-14:focus {
+  border-color: #e77600;
+  box-shadow: rgba(228, 121, 17, .5) 0 0 3px 2px;
+  outline: 0;
+}
+
+  /* CSS */
+  .button-21 {
+    align-items: center;
+    appearance: none;
+    background-color: #3EB2FD;
+    background-image: linear-gradient(1deg, #4F58FD, #149BF3 99%);
+    background-size: calc(100% + 20px) calc(100% + 20px);
+    border-radius: 100px;
+    border-width: 0;
+    box-shadow: none;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: CircularStd,sans-serif;
+    font-size: 1rem;
+    height: auto;
+    justify-content: center;
+    line-height: 1.5;
+    padding: 6px 20px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color .2s,background-position .2s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: top;
+    white-space: nowrap;
+  }
+
+  .button-21:active,
+  .button-21:focus {
+    outline: none;
+  }
+
+  .button-21:hover {
+    background-position: -20px -20px;
+  }
+
+  .button-21:focus:not(:active) {
+    box-shadow: rgba(40, 170, 255, 0.25) 0 0 0 .125em;
+  }
     </style>
 </head>
 <body>
   <div id="Forms">
 
-    <h1>SocketIO Tester</h1>
+    <h1>Control de maquina</h1>
     
     
-    <div id="DatosActuales"> </div>
+    <div class="contenido" id="DatosActuales"> </div>
     <form id="form_PID" action="" style="display: none;">
       <input id="input_kp" autocomplete="off" />
       <input id="input_ki" autocomplete="off" />
       <input id="input_kd" autocomplete="off" />
       <button>Send</button>
     </form>
-    <form id="form_SP" action="" style="margin:20px;">
-      <h4></h4>
+
+    <div class="contenido" style="margin-bottom: -5px;"> Cambiar Set Point </div>
+    <form id="form_SP" action="" style="margin:10px;">
       <input type="number" id="input_SP" autocomplete="off" />
-      <button>Send</button>
+      <button class="button-14">Send</button>
     </form>
-    <form id="Encender" action="" style="display: inline-block;">
-      <button style="width: 200px; height : 200px;">Encender</button>
-    </form>
-    <form id="Apagar" action="" style="display: inline-block;">
-      <button style="width: 200px; height : 200px;">Apagar</button>
-  </form>
+
+    <div style="display: inline-block;">
+      <form id="Encender" action="" style="display: inline-block;">
+        <button class="button-21" style="width: 200px; height : 50px;">Encender</button>
+      </form>
+      <form id="Apagar" action="" style="display: inline-block;">
+        <button class="button-21" style="width: 200px; height : 50px;">Apagar</button>
+      </form>
+    </div>
   <br>
   
 </div>
@@ -74,11 +203,10 @@
           data: Sensor_vals,
           borderWidth: 1
         },{
-        datasets: [{
           label: 'SetPoint',
           data: SetPoint_vals,
           borderWidth: 1
-        }]}]
+        }]
       },
       options: {
         scales: {
@@ -166,7 +294,7 @@
       divDatos.innerHTML = JSON.stringify(data);
       
       console.log(myChart.data.datasets);
-      
+      console.log(typeof data);
       myChart.data.labels.push(n+1);
       n = n+1
       myChart.data.datasets[0].data.push(data.sData);
