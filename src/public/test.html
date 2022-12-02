@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <title>SocketIO Tester</title>
+    <style>
+      #Forms{
+        display: inline-block;
+      }
+      #ChartDiv{
+        display: flex;
+        align-items: center;
+        margin: auto;
+      }
+    </style>
+</head>
+<body>
+  <div id="Forms">
+
+    <h1>SocketIO Tester</h1>
+    
+    
+    <div id="DatosActuales"> </div>
+    <form id="form_PID" action="" style="display: none;">
+      <input id="input_kp" autocomplete="off" />
+      <input id="input_ki" autocomplete="off" />
+      <input id="input_kd" autocomplete="off" />
+      <button>Send</button>
+    </form>
+    <form id="form_SP" action="" style="margin:20px;">
+      <h4></h4>
+      <input type="number" id="input_SP" autocomplete="off" />
+      <button>Send</button>
+    </form>
+    <form id="Encender" action="" style="display: inline-block;">
+      <button style="width: 200px; height : 200px;">Encender</button>
+    </form>
+    <form id="Apagar" action="" style="display: inline-block;">
+      <button style="width: 200px; height : 200px;">Apagar</button>
+  </form>
+  <br>
+  
+</div>
+
+<div id="ChartDiv">
+<canvas id="myChart"></canvas>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div id="dataSoFar">
+
+</div>
+
+  <script>
+    const ctx = document.getElementById('myChart');
+    
+    let n = 0;
+    let labels1 = [];
+    let Sensor_vals = [];
+    let SetPoint_vals = [];
+    var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels1,
+        datasets: [{
+          label: 'Distancia',
+          data: Sensor_vals,
+          borderWidth: 1
+        },{
+        datasets: [{
+          label: 'SetPoint',
+          data: SetPoint_vals,
+          borderWidth: 1
+        }]}]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        animation: false
+      }
+    });
+
+
+
+
+    var socket = io();
+
+    var form_PID = document.getElementById('form_PID');
+    var form_SP = document.getElementById('form_SP');
+    var input_kp = document.getElementById('input_kp');
+    var input_ki = document.getElementById('input_ki');
+    var input_kd = document.getElementById('input_kd');
+
+    var input_SP = document.getElementById('input_SP');
+
+    var setButton = document.getElementById('Encender');
+    var resetButton = document.getElementById('Apagar');
+
+    var divDatos = document.getElementById("DatosActuales");
+    var divDataSoFar = document.getElementById("dataSoFar");
+   
+    form_PID.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (input_kp.value && input_ki.value && input_kd.value) {
+        let kp = input_kp.value
+        let ki = input_ki.value
+        let kd = input_kd.value
+        var message = `{"kp":"${kp}", "ki":"${ki}", "kd":"${kd}"}`;
+        console.log(message);
+        socket.emit('cambioPID', message);
+        input_kp.value = '';
+        input_ki.value = '';
+        input_kd.value = '';
+      }
+    });
+    form_SP.addEventListener('submit',function(e){
+      e.preventDefault();
+      if (input_SP.value){
+        let SP = input_SP.value;
+        
+        var message = `{"SP":"${SP}"}`;
+        socket.emit('cambioSP', message );
+        input_SP.value = '';
+      }
+    })
+    setButton.addEventListener('submit',function(e){
+      e.preventDefault();
+      socket.emit('encender');
+    });
+    resetButton.addEventListener('submit',function(e){
+      e.preventDefault();
+      socket.emit('apagar');
+    });
+    
+    /*
+    form_PID.addEventListener('submit', function(e) { //Save data
+      e.preventDefault();
+      if (input1.value && input2.value && input3.value) {
+        let kp = input_kp.value
+        let ki = input_ki.value
+        let kd = input_kd.value
+        var message = `{"sData":"${kp}", "output":"${ki}", "SP":"${kd}"}`;
+        console.log(message);
+        socket.emit('saveData', message);
+        input1.value = '';
+        input2.value = '';
+        input3.value = '';
+      }
+    });*/
+
+    socket.on("changeVal", (data)=>{
+      console.log(data);
+    });
+    socket.on("updateWeb", (data)=>{
+      //data example: {sData: 45, output: 5, SP: 50}
+      divDatos.innerHTML = JSON.stringify(data);
+      
+      console.log(myChart.data.datasets);
+      
+      myChart.data.labels.push(n+1);
+      n = n+1
+      myChart.data.datasets[0].data.push(data.sData);
+      myChart.data.datasets[1].data.push(data.SP);
+
+      myChart.update();
+      //divDataSoFar.innerHTML += JSON.stringify(data)+ ` at ${Data.now()}`+"\n";
+    });
+
+
+  
+  </script>
+</body>
+</html>

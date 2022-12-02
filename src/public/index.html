@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js" type="text/javascript"></script>
+
+    <title>CRUD Socket.IO</title>
+</head>
+<body>
+    <h1>HOLA MUNDO</h1>
+
+    <canvas id="Sensor" width="600" height="400"></canvas>
+    <script>
+        
+        var pieData = [
+            {
+                value: 20,
+                color:"#878BB6"
+            },
+            {
+                value : 20,
+                color : "#4ACAB4"
+            },
+            {
+                value : 30,
+                color : "#FF8153"
+            },
+            {
+                value : 30,
+                color : "#FFEA88"
+            }
+        ];
+        // Get the context of the canvas element we want to select
+        var countries= document.getElementById("Sensor").getContext("2d");
+        //new Chart(countries).Pie(pieData);  
+        /*
+        data = {
+            labels: ["a"],
+            
+        }
+        const config = {
+        type: 'line',
+        data: data,
+        options: {
+            indexAxis: 'y',
+            scales: {
+            x: {
+                beginAtZero: true
+            }
+            }
+        }
+        };*/
+        var datAa = [
+            {
+                value: 20,
+            },
+            {
+                value : 20,
+            },
+            {
+                value : 30,
+            },
+            {
+                value : 30,
+            }
+        ];
+        const chart = new Chart(countries, {
+        type: 'line',
+        data: datAa
+        });
+    </script>
+</body>
+</html>
